@@ -16,7 +16,7 @@
     </h2>
 
     <div id="dealer-cards">
-        <img id="hidden" src="img/cards/BACK.png">
+
     </div>
 
 
@@ -25,9 +25,37 @@
     </h2>
     <div id="player-cards"></div>
     <p id="message"></p>
+    <form id="place-bet">
+        <input type="range" id="bet" name="bet" min="0" max="10" value="0" step="1" list="markers" required>
+        <label for="bet">Place Bet</label>
+        <datalist id="markers">
+            <option value="0"></option>
+            <option value="1"></option>
+            <option value="2"></option>
+            <option value="3"></option>
+            <option value="4"></option>
+            <option value="5"></option>
+            <option value="6"></option>
+            <option value="7"></option>
+            <option value="8"></option>
+            <option value="9"></option>
+            <option value="10"></option>
+        </datalist>
+        <p>Value of bet: <output id="value"></output></p>
+        <button type="submit">Place Bet</button>
+    </form>
+    <div>
+        <button id="add-chips">Add More Chips</button>
+    </div>
+<div> Chips:
+    <p id="total-chips"></p>
+
+</div>
     <button id="hit">Hit</button>
     <button id="stay">Stay</button>
+    <button id="new-hand">New Hand</button>
     <button id="restart">Restart Game</button>
+
 
 </body>
 <script src="index.js"></script>

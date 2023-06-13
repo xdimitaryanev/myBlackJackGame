@@ -1,12 +1,13 @@
 body {
     font-family: Georgia, serif;
     text-align: center;
-    background-image: url("img/table.jpg");
     background-repeat: no-repeat;
-    background-size:cover;
     color:aliceblue;
+    background: linear-gradient(-45deg, #000000, #0F5626);
+	background-size: 400% 400%;
 
 }
+
 
 #hit {
     width: 100px;
@@ -86,3 +87,16 @@ margin-top:50px;
 #stay:restart {
     box-shadow: 0 1px 10px 0 rgba(0,0,0,0.24),0 10px 100px 0 rgba(0,0,0,0.19);
 }
+
+img {
+    width: 150px;
+    -webkit-filter: drop-shadow(5px 5px 5px #222);
+    filter: drop-shadow(5px 5px 5px #222);
+    transform: translateY(0);
+    transition: transform 150ms
+    
+  }
+
+  img:hover{
+    transform: translateY(-2px);
+  }
