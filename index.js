@@ -9,24 +9,29 @@ let chips = 10;
 let canStay = true;
 let isBetPlaced = false;
 let canAddBet = true;
-let data = {};
-data.bet = 0;
+let betData = {};
+betData.bet = 0;
+
 
 // disable right click
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.onkeydown = function (e) {
+
 // disable F12 key
 if (e.keyCode == 123) {
  return false;
 }
+
 // disable I key
 if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
  return false;
 }
+
 // disable J key
 if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
  return false;
 }
+
 // disable U key
 if (e.ctrlKey && e.keyCode == 85) {
  return false;
@@ -38,62 +43,71 @@ window.onload = function () {
     addChips();
 }
 
+// add more chips
 document.getElementById("add-chips").addEventListener("click", addMoreChips);
 function addMoreChips() {
     chips += 10;
     let totalChips = document.getElementById("total-chips");
-    totalChips.innerText = parseInt(chips);
+    totalChips.innerText = parseInt(chips) + " $";
 }
 
+// add starting chips
 function addChips() {
     let totalChips = document.getElementById("total-chips");
-    totalChips.innerText = parseInt(chips);
+    totalChips.innerText = parseInt(chips) + " $";
 }
 
+// place bet
 const betEl = document.getElementById("place-bet");
 betEl.addEventListener("submit", event => {
     event.preventDefault();
     if (canAddBet) {
         const betData = new FormData(betEl);
-        data = Object.fromEntries(betData);
-        chips -= Number(data.bet);
+        BetData = Object.fromEntries(betData);
+        chips -= Number(BetData.bet);
         let totalChips = document.getElementById("total-chips");
-        totalChips.innerText = parseInt(chips);
-        console.log(data.bet);
+        totalChips.innerText = parseInt(chips) + "$";
         startGame();
         isBetPlaced = true;
         canAddBet = false;
     }
 })
 
-let value = document.querySelector("#value");
-let input = document.querySelector("#bet");
-value.textContent = input.value;
-
+// show the bet on the page
+let valueOfBet = document.getElementById("value-of-bet");
+let input = document.getElementById("bet");
+valueOfBet.textContent = input.value;
 input.addEventListener("input", (event) => {
-    value.textContent = event.target.value;
+valueOfBet.textContent = event.target.value;
 })
 
+// create the deck
 function buildDeck() {
     let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "K", "Q", "J"];
     let suits = ["C", "H", "S", "D"];
-    for (let i = 0; i < values.length; i++) {  // create the deck
+    for (let i = 0; i < values.length; i++) {  
         for (let j = 0; j < suits.length; j++) {
             deck.push(values[i] + "-" + suits[j])
         }
     }
-    deck = deck.sort((a, b) => 0.5 - Math.random()) // shuffle the deck
+
+    // shuffle the deck
+    deck = deck.sort((a, b) => 0.5 - Math.random()) 
 }
 
 function startGame() {
     document.getElementById("dealer-sum").innerText = dealerSum;
     let hiddenCardImg = document.createElement("img");
     hiddenCardImg.setAttribute("id", "hidden");
-    hidden = deck.pop(); //pick hidden card for the dealer
+    
+    //pick hidden card for the dealer
+    hidden = deck.pop(); 
     hiddenCardImg.src = "img/cards/BACK.png";
     document.getElementById("dealer-cards").append(hiddenCardImg);
     dealerSum += getValue(hidden);
-    while (dealerSum < 17) { //draw card for the dealer 
+
+    //draw card for the dealer 
+    while (dealerSum < 17) { 
         let cardImg = document.createElement("img");
         let card = deck.pop();
         cardImg.src = "img/cards/" + card + ".png";
@@ -102,7 +116,8 @@ function startGame() {
         document.getElementById("dealer-cards").append(cardImg);
     }
 
-    for (let i = 0; i < 2; i++) { //draw 2 cards for the player
+    //draw 2 cards for the player
+    for (let i = 0; i < 2; i++) { 
         let cardImg = document.createElement("img");
         let card = deck.pop();
         cardImg.src = "img/cards/" + card + ".png";
@@ -113,8 +128,8 @@ function startGame() {
     }
 }
 
+// draw an extra card
 document.getElementById("hit").addEventListener("click", hit);
-
 function hit() {
     if (playerSum > 21) {
         canHit = false;
@@ -137,8 +152,8 @@ function hit() {
     }
 }
 
+// stay :)
 document.getElementById("stay").addEventListener("click", stay);
-
 function stay() {
     if (isBetPlaced && canStay) {
         document.getElementById("hidden").src = "img/cards/" + hidden + ".png"
@@ -148,14 +163,14 @@ function stay() {
             document.getElementById("message").innerText = "You Lost";
         } else if (dealerSum > 21) {
             document.getElementById("message").innerText = "You Win";
-            chips += Number(data.bet) * 2;
+            chips += Number(BetData.bet) * 2;
         } else if (dealerSum === playerSum) {
             document.getElementById("message").innerText = "Its a Tie";
-            chips += Number(data.bet);
+            chips += Number(BetData.bet);
         } else if (dealerSum > playerSum) {
             document.getElementById("message").innerText = "You Lost";
         } else if (dealerSum < playerSum) {
-            chips += Number(data.bet) * 2;
+            chips += Number(BetData.bet) * 2;
             document.getElementById("message").innerText = "You Win";
         }
     }
@@ -163,6 +178,7 @@ function stay() {
     addChips();
 }
 
+// get the value of card
 function getValue(card) {
     let data = card.split("-")
     let value = data[0];
@@ -177,6 +193,7 @@ function getValue(card) {
     }
 }
 
+// check for aces 
 function checkAce(card) {
     if (card[0] === "A") {
         return 1;
@@ -184,8 +201,8 @@ function checkAce(card) {
     return 0;
 }
 
+// draw new hand
 document.getElementById("new-hand").addEventListener("click", newHand);
-
 function newHand() {
     while (deck.length > 0) {
         deck.pop();
@@ -207,12 +224,11 @@ function newHand() {
     isBetPlaced = false;
     canStay = true;
     canAddBet = true;
-    // document.getElementById("dealer-sum").innerText = dealerSum;
     buildDeck();
 }
 
+// refresh the page
 document.getElementById("restart").addEventListener("click", restart);
-
 function restart() {
     location.reload();
 } 
