@@ -9,8 +9,6 @@ let chips = 10;
 let canStay = true;
 let isBetPlaced = false;
 let canAddBet = true;
-let betData = {};
-betData.bet = 0;
 
 
 // disable right click
@@ -44,37 +42,42 @@ window.onload = function () {
 }
 
 // add more chips
-document.getElementById("add-chips").addEventListener("click", addMoreChips);
+const addChipsEl = document.getElementById("add-chips")
+addChipsEl.addEventListener("click", addMoreChips);
 function addMoreChips() {
     chips += 10;
     let totalChips = document.getElementById("total-chips");
-    totalChips.innerText = parseInt(chips) + " $";
+    totalChips.innerText = chips + " $";
     canAddBet = true;
 }
 
 // add starting chips
 function addChips() {
     let totalChips = document.getElementById("total-chips");
-    totalChips.innerText = parseInt(chips) + " $";
+    totalChips.innerText = chips + " $";
 }
 
 // place bet
 const betEl = document.getElementById("place-bet");
+let betData = new FormData(betEl);
+betData = Object.fromEntries(betData);
 betEl.addEventListener("submit", event => {
     event.preventDefault();
+
     if (chips <= 0){
         canAddBet = false;
         alert("Please add more chips");
     }
     if (canAddBet) {
-        const betData = new FormData(betEl);
-        BetData = Object.fromEntries(betData);
-            if (chips < Number(BetData.bet)){
+
+            if (chips < Number(betData.bet)){
             return alert("Please add more chips");
             }
-        chips -= Number(BetData.bet);
+        chips -= Number(betData.bet);
         let totalChips = document.getElementById("total-chips");
-        totalChips.innerText = parseInt(chips) + "$";
+        totalChips.innerText = chips + " $";
+        betEl.style.visibility = "hidden";
+        addChipsEl.style.visibility = "hidden";
         startGame();
         isBetPlaced = true;
         canAddBet = false;
@@ -161,25 +164,32 @@ function hit() {
 }
 
 // stay :)
-document.getElementById("stay").addEventListener("click", stay);
+const stayBtnEl = document.getElementById("stay")
+stayBtnEl.addEventListener("click", stay);
+const msgEl = document.createElement("p");
+msgEl.setAttribute("id", "message");
+const divMsgEl = document.getElementById("msg-div");
+divMsgEl.appendChild(msgEl);
 function stay() {
     if (isBetPlaced && canStay) {
         document.getElementById("hidden").src = "img/cards/" + hidden + ".png"
         document.getElementById("dealer-sum").innerText = dealerSum;
         canStay = false;
         if (playerSum > 21) {
-            document.getElementById("message").innerText = "You Lost";
+            msgEl.innerText = "You Lost";
         } else if (dealerSum > 21) {
-            document.getElementById("message").innerText = "You Win";
-            chips += Number(BetData.bet) * 2;
+            msgEl.innerText = "You Win";
+            chips += Number(betData.bet) * 2;
+            console.log(betData.bet)
         } else if (dealerSum === playerSum) {
-            document.getElementById("message").innerText = "Its a Tie";
-            chips += Number(BetData.bet);
+            msgEl.innerText = "Its a Tie";
+            chips += Number(betData.bet);
         } else if (dealerSum > playerSum) {
-            document.getElementById("message").innerText = "You Lost";
+            msgEl.innerText = "You Lost";
         } else if (dealerSum < playerSum) {
-            chips += Number(BetData.bet) * 2;
-            document.getElementById("message").innerText = "You Win";
+            chips += Number(betData.bet) * 2;
+            msgEl.innerText = "You Win";
+            console.log(betData.bet)
         }
     }
     canHit = false;
@@ -197,7 +207,7 @@ function getValue(card) {
             return 10;
         }
     } else {
-        return parseInt(value);
+        return Number(value);
     }
 }
 
@@ -232,6 +242,8 @@ function newHand() {
     isBetPlaced = false;
     canStay = true;
     canAddBet = true;
+    betEl.style.visibility = "visible";
+    addChipsEl.style.visibility = "visible";
     buildDeck();
 }
 
