@@ -49,6 +49,7 @@ function addMoreChips() {
     chips += 10;
     let totalChips = document.getElementById("total-chips");
     totalChips.innerText = parseInt(chips) + " $";
+    canAddBet = true;
 }
 
 // add starting chips
@@ -61,9 +62,16 @@ function addChips() {
 const betEl = document.getElementById("place-bet");
 betEl.addEventListener("submit", event => {
     event.preventDefault();
+    if (chips <= 0){
+        canAddBet = false;
+        alert("Please add more chips");
+    }
     if (canAddBet) {
         const betData = new FormData(betEl);
         BetData = Object.fromEntries(betData);
+            if (chips < Number(BetData.bet)){
+            return alert("Please add more chips");
+            }
         chips -= Number(BetData.bet);
         let totalChips = document.getElementById("total-chips");
         totalChips.innerText = parseInt(chips) + "$";
