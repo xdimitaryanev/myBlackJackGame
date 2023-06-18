@@ -5,10 +5,7 @@ body {
     background-size:cover;
     color:aliceblue;
     background: linear-gradient(-45deg, #000000, #0F5626);
-	background-size: 400% 400%;
-
-
-
+	  background-size: 400% 400%;
 }
 
 .start-game {
@@ -32,17 +29,15 @@ body {
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
-    
-
 }
+
 .start-game:hover {
     box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
     transform: translateY(-2px);
-  }
-  #logo {
+}
 
-
-    width: 600px;
+#logo {
+  width: 600px;
   border-radius: 50%;
   padding-top: 40px;
   padding-bottom: 15px;

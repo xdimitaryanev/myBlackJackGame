@@ -1,64 +1,62 @@
 body {
-    font-family: Georgia, serif;
-    text-align: center;
-    background-repeat: no-repeat;
-    color:aliceblue;
-    background: linear-gradient(-45deg, #000000, #0F5626);
-	background-size: 400% 400%;
-
+font-family: Georgia, serif;
+text-align: center;
+background-repeat: no-repeat;
+color:aliceblue;
+background: linear-gradient(-45deg, #000000, #0F5626);
+background-size: 400% 400%;
 }
 
-
 #hit {
-    width: 100px;
-    height: 50px;
-    border-radius: 8px;
-    background-color:darkgreen;
+width: 100px;
+height: 50px;
+border-radius: 8px;
+background-color:darkgreen;
 color: aliceblue;
 padding: 1px;
 border: 2px solid black;
 font-size: 15px;
 margin-top:50px;
-
 }
 
 #hit:hover {
-    box-shadow: 0 1px 10px 0 rgba(0,0,0,0.24),0 10px 100px 0 rgba(0,0,0,0.19);
+box-shadow: 0 1px 10px 0 rgba(0,0,0,0.24),0 10px 100px 0 rgba(0,0,0,0.19);
 }
-#hit:active{
-    transform: translateY(2px);
-}
-#stay {
-    width: 100px;
-    height: 50px;
-    border-radius: 8px;
-    background-color:firebrick;
-    color: aliceblue;
-    padding: 1px;
-    border: 2px solid black;
-    font-size: 15px;
-    
-    margin-top:50px;
 
+#hit:active{
+transform: translateY(2px);
 }
+
+#stay {
+width: 100px;
+height: 50px;
+border-radius: 8px;
+background-color:firebrick;
+color: aliceblue;
+padding: 1px;
+border: 2px solid black;
+font-size: 15px;
+margin-top:50px;
+}
+
 #stay:hover {
-    box-shadow: 0 1px 10px 0 rgba(0,0,0,0.24),0 10px 100px 0 rgba(0,0,0,0.19);
+box-shadow: 0 1px 10px 0 rgba(0,0,0,0.24),0 10px 100px 0 rgba(0,0,0,0.19);
 }
+
 #stay:active{
-    transform: translateY(2px);
+transform: translateY(2px);
 }
 
 #dealer-cards img {
-    height: 150px;
-    width: 100px;
-    margin: 1px;
-  
+height: 150px;
+width: 100px;
+margin: 1px;
 }
 
 #player-cards img {
-    height: 175px;
-    width: 125px;
-    margin: 1px;
+height: 175px;
+width: 125px;
+margin: 1px;
 }
 
 
