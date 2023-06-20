@@ -113,12 +113,10 @@ valueOfBet.textContent = event.target.value;
 const betForm = document.getElementById("place-bet");
 const placeBetBtn = document.getElementById("place-bet-btn");
 
-//let betData = new FormData(betForm);
-//betData = Object.fromEntries(betData);
 placeBetBtn.addEventListener("click", addBet)
 function addBet (event) {
     event.preventDefault();
-    addFunctBtns();
+  
     if (chips <= 0) {
         canAddBet = false;
         alert("Please add more chips or reduce your bet");
@@ -131,6 +129,7 @@ function addBet (event) {
         totalChipsEl.innerText = chips + " $";
         removeBetBtns()
         startGame();
+        addFunctBtns();
         isBetPlaced = true;
         canAddBet = false;
     }
