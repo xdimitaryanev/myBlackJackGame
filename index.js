@@ -2,7 +2,6 @@ let playerSum = 0;
 let dealerSum = 0;
 let playerAces = 0;
 let dealerAces = 0;
-let hidden = 0;
 let deck = [];
 let canHit = true;
 let chips = 10;
@@ -15,12 +14,15 @@ const newHandBtn = document.getElementById("new-hand");
 const stayBtn = document.getElementById("stay");
 const addChipsBtn = document.getElementById("add-chips");
 const placeBetBtn = document.getElementById("place-bet-btn");
+const hitBtn = document.getElementById("hit");
+
 
 // buttons handling
 newHandBtn.addEventListener("click", newHand);
 stayBtn.addEventListener("click", stay);
 addChipsBtn.addEventListener("click", addMoreChips);
 placeBetBtn.addEventListener("click", addBet);
+hitBtn.addEventListener("click", hit);
 
 // declaring the slider element and handling
 let valueOfBet = document.getElementById("value-of-bet");
@@ -40,6 +42,7 @@ const dealerCardsEl = document.getElementById("dealer-cards");
 const totalChipsEl = document.getElementById("total-chips");
 const msgEl = document.getElementById("outcome-message");
 const dealerSumEl = document.getElementById("dealer-sum");
+const plyaerSumEl = document.getElementById("player-sum");
 
 window.onload = function () {
     buildDeck();
@@ -107,7 +110,6 @@ function addChips() {
 // place bet
 function addBet (event) {
     event.preventDefault();
-  
     if (chips <= 0) {
         canAddBet = false;
         alert("You don't have enough chips, please add more chips.");
@@ -126,8 +128,9 @@ function addBet (event) {
     }
 }
 
-// create the deck
+// create and shuffle the deck
 function buildDeck() {
+    // create
     let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "K", "Q", "J"];
     let suits = ["C", "H", "S", "D"];
     for (let i = 0; i < values.length; i++) {
@@ -135,20 +138,19 @@ function buildDeck() {
             deck.push(values[i] + "-" + suits[j])
         }
     }
-
-    // shuffle the deck
+    // shuffle
     deck = deck.sort((a, b) => 0.5 - Math.random())
 }
 
 function startGame() {
-    document.getElementById("dealer-sum").innerText = dealerSum;
+    dealerSumEl.innerText = dealerSum;
     let hiddenCardImg = document.createElement("img");
     hiddenCardImg.setAttribute("id", "hidden");
 
-    //pick hidden card for the dealer
+    //pick a hidden card for the dealer
     hidden = deck.pop();
     hiddenCardImg.src = "img/cards/BACK.png";
-    document.getElementById("dealer-cards").append(hiddenCardImg);
+    dealerCardsEl.append(hiddenCardImg);
     dealerSum += getValue(hidden);
 
     //draw card for the dealer 
@@ -158,7 +160,7 @@ function startGame() {
         cardImg.src = "img/cards/" + card + ".png";
         dealerSum += getValue(card);
         dealerAces += checkAce(card);
-        document.getElementById("dealer-cards").append(cardImg);
+        dealerCardsEl.append(cardImg);
     }
 
     //draw 2 cards for the player
@@ -168,14 +170,12 @@ function startGame() {
         cardImg.src = "img/cards/" + card + ".png";
         playerSum += getValue(card);
         playerAces += checkAce(card);
-        document.getElementById("player-cards").append(cardImg);
-        document.getElementById("player-sum").innerText = playerSum;
+        playerCardsEl.append(cardImg);
+        plyaerSumEl.innerText = playerSum;
     }
 }
 
 // draw an extra card
-let hitBtn = document.getElementById("hit")
-hitBtn.addEventListener("click", hit);
 function hit() {
     if (playerSum > 21) {
         canHit = false;
@@ -187,8 +187,8 @@ function hit() {
             cardImg.src = "img/cards/" + card + ".png";
             playerSum += getValue(card);
             playerAces += checkAce(card);
-            document.getElementById("player-cards").append(cardImg);
-            document.getElementById("player-sum").innerText = playerSum;
+            playerCardsEl.append(cardImg);
+            plyaerSumEl.innerText = playerSum;
             if (playerSum > 21) {
                 stay();
             }
