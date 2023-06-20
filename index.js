@@ -39,6 +39,7 @@ const playerCardsEl = document.getElementById("player-cards");
 const dealerCardsEl = document.getElementById("dealer-cards");
 const totalChipsEl = document.getElementById("total-chips");
 const msgEl = document.getElementById("outcome-message");
+const dealerSumEl = document.getElementById("dealer-sum");
 
 window.onload = function () {
     buildDeck();
@@ -199,22 +200,23 @@ function hit() {
 
 // stay :)
 function stay() {
+    dealerSumEl.style.visibility = "visible";
     if (isBetPlaced && canStay) {
         document.getElementById("hidden").src = "img/cards/" + hidden + ".png"
-        document.getElementById("dealer-sum").innerText = dealerSum;
+        dealerSumEl.innerText = dealerSum;
         canStay = false;
         if (playerSum > 21) {
             msgEl.innerText = `You Lost ${valueOfBet.value}$`;
         } else if (dealerSum > 21) {
             msgEl.innerText = `You Win ${valueOfBet.value}$`;
-            chips += valueOfBet.value * 2;
+            chips += Number(valueOfBet.value) * 2;
         } else if (dealerSum === playerSum) {
             msgEl.innerText = "Its a Tie";
-            chips += valueOfBet.value;
+            chips += Number(valueOfBet.value);
         } else if (dealerSum > playerSum) {
             msgEl.innerText = `You Lost ${valueOfBet.value}$`;
         } else if (dealerSum < playerSum) {
-            chips += valueOfBet.value;
+            chips += Number(valueOfBet.value);
             msgEl.innerText = `You Win ${valueOfBet.value}$`
         }
     }
@@ -248,11 +250,12 @@ function checkAce(card) {
 
 // draws a new hand
 function newHand() {
-    removeOutcomeMsg()
-    removeFunctBtns()
+    dealerSumEl.style.visibility = "hidden";
+    removeOutcomeMsg();
+    removeFunctBtns();
     deck = [];
     playerSum = 0;
-    removeCards()
+    removeCards();
     dealerSum = 0;
     playerAces = 0;
     dealerAces = 0;

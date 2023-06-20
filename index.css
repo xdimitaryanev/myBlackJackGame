@@ -90,11 +90,16 @@ img {
     padding: 1px;
     border: 2px solid black;
     font-size: 15px;
-    
     margin-top:50px;
 
 }
 
 #new-hand:hover {
     box-shadow: 0 1px 10px 0 rgba(0,0,0,0.24),0 10px 100px 0 rgba(0,0,0,0.19);
+}
+
+#dealer-sum {
+    visibility: hidden;
+    
+
 }
