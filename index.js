@@ -12,40 +12,33 @@ let canAddBet = true;
 
 // declaring buttons
 const newHandBtn = document.getElementById("new-hand");
+const stayBtn = document.getElementById("stay");
+const addChipsBtn = document.getElementById("add-chips");
+const placeBetBtn = document.getElementById("place-bet-btn");
+
 // buttons handling
 newHandBtn.addEventListener("click", newHand);
-let playerCards = document.getElementById("player-cards");
-let dealerCards = document.getElementById("dealer-cards");
-let totalChipsEl = document.getElementById("total-chips");
-const addChipsEl = document.getElementById("add-chips")
-addChipsEl.addEventListener("click", addMoreChips);
+stayBtn.addEventListener("click", stay);
+addChipsBtn.addEventListener("click", addMoreChips);
+placeBetBtn.addEventListener("click", addBet);
 
+// declaring the slider element and handling
+let valueOfBet = document.getElementById("value-of-bet");
+let input = document.getElementById("bet");
 
+valueOfBet.textContent = input.value;
+input.addEventListener("input", (event) => {
+valueOfBet.textContent = event.target.value;
+})
 
-// disable right click
-document.addEventListener('contextmenu', event => event.preventDefault());
-document.onkeydown = function (e) {
+// declaring bet form
+const betFormEl = document.getElementById("place-bet");
 
-    // disable F12 key
-    //if (e.keyCode == 123) {
-    // return false;
-    //}
-
-    // disable I key
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
-        return false;
-    }
-
-    // disable J key
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
-        return false;
-    }
-
-    // disable U key
-    if (e.ctrlKey && e.keyCode == 85) {
-        return false;
-    }
-}
+// declaring other UI elements
+const playerCardsEl = document.getElementById("player-cards");
+const dealerCardsEl = document.getElementById("dealer-cards");
+const totalChipsEl = document.getElementById("total-chips");
+const msgEl = document.getElementById("outcome-message");
 
 window.onload = function () {
     buildDeck();
@@ -54,14 +47,14 @@ window.onload = function () {
 
 // add "place bet" and "add more chips" buttons to the UI
 function addBetBtns() {
-    betForm.style.display = "block";
-    addChipsEl.style.display = "inline";
+    betFormEl.style.display = "block";
+    addChipsBtn.style.display = "inline";
 }
 
 // remove "place bet" and "add more chips" buttons from the UI
 function removeBetBtns() {
-    betForm.style.display = "none";
-    addChipsEl.style.display = "none";
+    betFormEl.style.display = "none";
+    addChipsBtn.style.display = "none";
 }
 
 // add "outcome" message to the UI
@@ -88,6 +81,15 @@ function addFunctBtns() {
     newHandBtn.style.display = "inline"
 }
 
+// removes both player and dealer cards from the UI
+function removeCards() {
+    while (playerCardsEl.hasChildNodes()) {
+        playerCardsEl.removeChild(playerCardsEl.firstChild);
+    }
+    while (dealerCardsEl.hasChildNodes()) {
+        dealerCardsEl.removeChild(dealerCardsEl.firstChild);
+    }
+}
 
 // add more chips
 function addMoreChips() {
@@ -96,34 +98,22 @@ function addMoreChips() {
     canAddBet = true;
 }
 
-// add starting chips
+// add starting chips for the player
 function addChips() {
     totalChipsEl.innerText = chips + " $";
 }
 
-
-// slider element
-let valueOfBet = document.getElementById("value-of-bet");
-let input = document.getElementById("bet");
-valueOfBet.textContent = input.value;
-input.addEventListener("input", (event) => {
-valueOfBet.textContent = event.target.value;
-})
-// declaring bet form and place bet button
-const betForm = document.getElementById("place-bet");
-const placeBetBtn = document.getElementById("place-bet-btn");
-
-placeBetBtn.addEventListener("click", addBet)
+// place bet
 function addBet (event) {
     event.preventDefault();
   
     if (chips <= 0) {
         canAddBet = false;
-        alert("Please add more chips or reduce your bet");
+        alert("You don't have enough chips, please add more chips.");
     }
     if (canAddBet) {
         if (chips < Number(valueOfBet.value)) {
-            return alert("Please add more chips");
+            return alert("You don't have enough chips, please reduce the size of your bet or add more chips.");
         }
         chips -= Number(valueOfBet.value);
         totalChipsEl.innerText = chips + " $";
@@ -134,8 +124,6 @@ function addBet (event) {
         canAddBet = false;
     }
 }
-
-
 
 // create the deck
 function buildDeck() {
@@ -210,12 +198,7 @@ function hit() {
 }
 
 // stay :)
-const stayBtn = document.getElementById("stay")
-stayBtn.addEventListener("click", stay);
-const msgEl = document.getElementById("outcome-message");
-
 function stay() {
-    addOutcomeMsg()
     if (isBetPlaced && canStay) {
         document.getElementById("hidden").src = "img/cards/" + hidden + ".png"
         document.getElementById("dealer-sum").innerText = dealerSum;
@@ -235,11 +218,12 @@ function stay() {
             msgEl.innerText = `You Win ${valueOfBet.value}$`
         }
     }
-    canHit = false;
+    addOutcomeMsg()
     addChips();
+    canHit = false;
 }
 
-// get the value of card
+// get the value of a card
 function getValue(card) {
     let data = card.split("-")
     let value = data[0];
@@ -262,17 +246,6 @@ function checkAce(card) {
     return 0;
 }
 
-// removes both player and dealer cards from the UI
-function removeCards() {
-    while (playerCards.hasChildNodes()) {
-        playerCards.removeChild(playerCards.firstChild);
-    }
-    while (dealerCards.hasChildNodes()) {
-        dealerCards.removeChild(dealerCards.firstChild);
-    }
-}
-
-
 // draws a new hand
 function newHand() {
     removeOutcomeMsg()
@@ -290,4 +263,29 @@ function newHand() {
     canAddBet = true;
     addBetBtns();
     buildDeck();
+}
+
+// disable right click
+document.addEventListener('contextmenu', event => event.preventDefault());
+document.onkeydown = function (e) {
+
+    // disable F12 key
+    //if (e.keyCode == 123) {
+    // return false;
+    //}
+
+    // disable I key
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+        return false;
+    }
+
+    // disable J key
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+        return false;
+    }
+
+    // disable U key
+    if (e.ctrlKey && e.keyCode == 85) {
+        return false;
+    }
 }
