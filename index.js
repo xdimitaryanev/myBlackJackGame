@@ -9,6 +9,7 @@ let chips = 10;
 let canStay = true;
 let isBetPlaced = false;
 let canAddBet = true;
+let betValue = 0;
 
 
 // disable right click
@@ -41,6 +42,42 @@ window.onload = function () {
     addChips();
 }
 
+// add "place bet" and "add more chips" buttons to the UI
+function addBetBtns () {
+    betEl.style.display = "block";
+    addChipsEl.style.display = "inline";
+}
+
+// remove "place bet" and "add more chips" buttons from the UI
+function removeBetBtns () {
+    betEl.style.display = "none";
+    addChipsEl.style.display = "none";
+}
+
+// add "outcome" message to the UI
+function addOutcomeMsg () {
+    msgEl.style.display="block"
+}
+
+// remove "outcome" message from the UI
+function removeOutcomeMsg () {
+    msgEl.style.display = "none"
+}
+
+// removes "Hit", "Stay" and "New Hand" buttons from the UI
+function removeFunctBtns () {
+    hitBtn.style.display = "none"
+    stayBtn.style.display = "none"
+    newHandBtn.style.display = "none"
+}
+
+// add "Hit", "Stay" and "New Hand" buttons from the UI
+function addFunctBtns () {
+    hitBtn.style.display = "inline"
+    stayBtn.style.display = "inline"
+    newHandBtn.style.display = "inline"
+}
+
 // add more chips
 const addChipsEl = document.getElementById("add-chips")
 addChipsEl.addEventListener("click", addMoreChips);
@@ -63,7 +100,7 @@ let betData = new FormData(betEl);
 betData = Object.fromEntries(betData);
 betEl.addEventListener("submit", event => {
     event.preventDefault();
-
+    addFunctBtns();
     if (chips <= 0){
         canAddBet = false;
         alert("Please add more chips");
@@ -76,15 +113,14 @@ betEl.addEventListener("submit", event => {
         chips -= Number(betData.bet);
         let totalChips = document.getElementById("total-chips");
         totalChips.innerText = chips + " $";
-        betEl.style.visibility = "hidden";
-        addChipsEl.style.visibility = "hidden";
+        removeBetBtns ()
         startGame();
         isBetPlaced = true;
         canAddBet = false;
     }
 })
 
-// show the bet on the page
+// slider element
 let valueOfBet = document.getElementById("value-of-bet");
 let input = document.getElementById("bet");
 valueOfBet.textContent = input.value;
@@ -140,7 +176,8 @@ function startGame() {
 }
 
 // draw an extra card
-document.getElementById("hit").addEventListener("click", hit);
+let hitBtn = document.getElementById("hit")
+hitBtn.addEventListener("click", hit);
 function hit() {
     if (playerSum > 21) {
         canHit = false;
@@ -164,32 +201,33 @@ function hit() {
 }
 
 // stay :)
-const stayBtnEl = document.getElementById("stay")
-stayBtnEl.addEventListener("click", stay);
-const msgEl = document.createElement("p");
-msgEl.setAttribute("id", "message");
-const divMsgEl = document.getElementById("msg-div");
-divMsgEl.appendChild(msgEl);
+const stayBtn = document.getElementById("stay")
+stayBtn.addEventListener("click", stay);
+const msgEl = document.getElementById("outcome-message");
+
 function stay() {
+    addOutcomeMsg ()
     if (isBetPlaced && canStay) {
         document.getElementById("hidden").src = "img/cards/" + hidden + ".png"
         document.getElementById("dealer-sum").innerText = dealerSum;
         canStay = false;
         if (playerSum > 21) {
-            msgEl.innerText = "You Lost";
+            betValue = Number(betData.bet);
+            msgEl.innerText = `You Lost ${betValue}$`;
         } else if (dealerSum > 21) {
-            msgEl.innerText = "You Win";
-            chips += Number(betData.bet) * 2;
-            console.log(betData.bet)
+            betValue = Number(betData.bet) * 2
+            msgEl.innerText = `You Win ${betValue}$`;
+            chips += betValue * 2;
         } else if (dealerSum === playerSum) {
             msgEl.innerText = "Its a Tie";
-            chips += Number(betData.bet);
+            chips += betValue;
         } else if (dealerSum > playerSum) {
-            msgEl.innerText = "You Lost";
+            betValue = Number(betData.bet);
+            msgEl.innerText = `You Lost ${betValue}$`;
         } else if (dealerSum < playerSum) {
-            chips += Number(betData.bet) * 2;
-            msgEl.innerText = "You Win";
-            console.log(betData.bet)
+            betValue = Number(betData.bet) * 2
+            chips += betValue;
+            msgEl.innerText = `You Win ${betValue}$`
         }
     }
     canHit = false;
@@ -220,8 +258,11 @@ function checkAce(card) {
 }
 
 // draw new hand
-document.getElementById("new-hand").addEventListener("click", newHand);
+const newHandBtn = document.getElementById("new-hand")
+newHandBtn.addEventListener("click", newHand);
 function newHand() {
+    removeOutcomeMsg ()
+    removeFunctBtns ()
     while (deck.length > 0) {
         deck.pop();
         playerSum = 0;
@@ -242,13 +283,6 @@ function newHand() {
     isBetPlaced = false;
     canStay = true;
     canAddBet = true;
-    betEl.style.visibility = "visible";
-    addChipsEl.style.visibility = "visible";
+    addBetBtns ();
     buildDeck();
 }
-
-// refresh the page
-document.getElementById("restart").addEventListener("click", restart);
-function restart() {
-    location.reload();
-} 
